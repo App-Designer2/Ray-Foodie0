@@ -307,7 +307,7 @@ namespace Ray_Foodie
 
             // Variables de cálculo de totales
             // Variablen zur Berechnung von Gesamtsummen
-            double subtotalGeneral = 0;
+            double totalGeneral = 0; // Cambiado de subtotalGeneral a totalGeneral porque representa el pago final real
 
             // Recorrer los productos del DataGridView para listarlos
             // Die Produkte im DataGridView durchgehen, um sie aufzulisten
@@ -320,7 +320,7 @@ namespace Ray_Foodie
                     double precioUnidad = Convert.ToDouble(fila.Cells["colPrecio"].Value);
                     double totalFila = Convert.ToDouble(fila.Cells["colSubtotal"].Value);
 
-                    subtotalGeneral += totalFila;
+                    totalGeneral += totalFila;
 
                     // Recortar nombre si es muy largo para que no rompa el diseño del ticket
                     // Name kürzen, wenn er zu lang ist, damit das Ticket-Design nicht kaputtgeht
@@ -329,9 +329,6 @@ namespace Ray_Foodie
 
                     // Dibujar la fila formateada en columnas simuladas por espacios fijos
                     // Die formatierte Zeile in Spalten zeichnen, die durch feste Leerzeichen simuliert werden
-
-                    // Ajustamos las posiciones X para alinear la cantidad, el precio y el total
-                    // Wir passen die X-Positionen an, um Menge, Preis und Gesamt abzustimmen
                     e.Graphics.DrawString(producto.PadRight(15), fontTexto, brush, x, y);
                     e.Graphics.DrawString(cantidad.PadLeft(3), fontTexto, brush, x + 120, y);
                     e.Graphics.DrawString(precioUnidad.ToString("0.00").PadLeft(8), fontTexto, brush, x + 150, y);
@@ -340,17 +337,24 @@ namespace Ray_Foodie
                 }
             }
 
-            // Cálculos de Impuestos (MwSt. 19% incluido según requerimiento)
-            // Steuerberechnungen (inkl. MwSt. 19% nach Bedarf)
-            double mwst = subtotalGeneral * 0.19;
+
+            // El precio neto es el total dividido entre 1.19
+            // Der Nettopreis ist der Gesamtbetrag geteilt durch 1,19
+            double nettoGesamt = totalGeneral / 1.19;
+
+            // El IVA es la resta matemática pura del Total menos el Neto
+            // Die Mehrwertsteuer ist einfach die mathematische Differenz zwischen dem Gesamtbetrag und dem Nettobetrag
+            double mwst = totalGeneral - nettoGesamt;
 
             e.Graphics.DrawString(new string('-', 35), fontTexto, brush, x, y); y += 15;
-            e.Graphics.DrawString($"Zwischensumme:".PadRight(22) + $"{subtotalGeneral:0.00} €", fontTexto, brush, x, y); y += 15;
+
+            // Mostramos el Neto y el IVA desglosado
+            e.Graphics.DrawString($"Netto Gesamt:".PadRight(22) + $"{nettoGesamt:0.00} €", fontTexto, brush, x, y); y += 15;
             e.Graphics.DrawString($"Inkl. 19% MwSt:".PadRight(22) + $"{mwst:0.00} €", fontTexto, brush, x, y); y += 20;
 
-            // Total a Pagar en grande y negrita
+            // Total a Pagar en grande y negrita (Sigue siendo exactamente la suma de los productos)
             // Gesamt zu zahlen in groß und fett
-            e.Graphics.DrawString($"GESAMTSUMME:".PadRight(18) + $"{subtotalGeneral:0.00} €", fontTitulo, brush, x, y); y += 30;
+            e.Graphics.DrawString($"GESAMTSUMME:".PadRight(18) + $"{totalGeneral:0.00} €", fontTitulo, brush, x, y); y += 30;
 
             // Mensaje de Despedida
             // Abschiedsnachricht
