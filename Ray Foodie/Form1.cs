@@ -34,7 +34,7 @@ namespace Ray_Foodie
         {
             // Usamos la barra inclinada normal '/' que funciona perfectamente en .NET moderno
             // Wir verwenden den normalen Schrägstrich '/', der in modernem .NET perfekt funktioniert
-            string rutaImages = Application.StartupPath + "/Image/";
+            string rutaImages = Path.Combine(Application.StartupPath, "..", "..", "..", "Image") + "/";
 
             // CATEGORÍA: Warme Speisen (Platos Calientes)
             menuProductos.Add(new Producto("Hamburguesa Clásica", 12.50, "Carne de res de 150g, queso cheddar, lechuga y tomate.", "Warme", Image.FromFile(rutaImages + "hamburguesa.png")));
